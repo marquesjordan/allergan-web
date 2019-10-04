@@ -1,4 +1,8 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useState} from 'react';
+import { Link } from 'react-router-dom';
+import Switch from 'react-toggle-switch';
+import './AuthLander.css';
+
 
 export default() => {
     
@@ -23,9 +27,20 @@ export default() => {
         {id: 'password', label: 'Password', val: password, setter: setPassword }
     ];
 
+    const footer = () => {
+        return (
+            <div className="auth-form-footer">
+                <div className="auth-form-promo">
+                    Send promos and offers via SMS <Switch className="auth-form-promo-switch" on={true} />
+                </div>
+                <div>
+                    <Link to="/login">Alrady have an account?</Link>
+                </div>
+            </div>
+        ); 
+    }
 
-
-    return {data, title, subTitle, buttonText};
+    return {data, title, subTitle, buttonText, footer};
 }
 
 

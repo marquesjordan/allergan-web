@@ -4,7 +4,9 @@ import createDataContext from './createDataContext';
 const authReducer = (state, action) => {
     switch (action.type) {
         case 'register':
-            return { user: action.payload } 
+            return { ...state, user: action.payload, errorMessage: ''} 
+        case 'add_error':
+            return { ...state, user: {}, errorMessage: action.payload}
         default:
             return state;
     }
@@ -21,15 +23,13 @@ const register = (dispatch) => {
                 username: username, 
                 mobilePhone: mobilePhone, 
                 password: password, 
-            });
-            console.log('XXXXXXXX ', response.data)
-            
+            });            
             // await AsyncStorage.setItem('token', response.data.token);
-            // dispatch({type:'register', payload: response.data.token});
+            dispatch({type:'register', payload: response.data});
             // navigate('ContactList');
         } catch (err) {
-            console.log(err.message)
-            dispatch({type: 'add_error', payload: 'Sign Up Error'})
+            console.log(err.response)
+            dispatch({type: 'add_error', payload: err.response.data})
         }
     }
 }
