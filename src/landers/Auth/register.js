@@ -12,6 +12,7 @@ export default() => {
     const [username, setUsername] = useState('');
     const [mobilePhone, setMobilePhone] = useState('');
     const [password, setPassword] = useState('');
+    const [promo, setPromo] = useState(false);
 
     const title = 'Create your new account';
     const subTitle = 'Enter Registration Info';
@@ -27,11 +28,16 @@ export default() => {
         {id: 'password', label: 'Password', val: password, setter: setPassword }
     ];
 
+    const toggleSwitch = () => {
+        const val = promo;
+        setPromo(!val);
+    }
+
     const footer = () => {
         return (
             <div className="auth-form-footer">
                 <div className="auth-form-promo">
-                    Send promos and offers via SMS <Switch className="auth-form-promo-switch" on={true} />
+                    Send promos and offers via SMS <Switch onClick={() => toggleSwitch()} on={promo} className="auth-form-promo-switch" />
                 </div>
                 <div>
                     <Link to="/login">Alrady have an account?</Link>

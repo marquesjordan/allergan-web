@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React, {useContext, useEffect, useState} from 'react';
 import {Context as AuthContext} from '../../contexts/authContext';
 import './AuthLander.css';
@@ -7,7 +8,7 @@ import loginData from './login';
 
 const AuthForm = ({authType}) => {
 
-    const { state, register } = useContext(AuthContext);
+    const { state, register, login } = useContext(AuthContext);
     const [pending, setPending] = useState(false);
     const [errors, setErrors] = useState('');
     const {data, title, subTitle, buttonText, footer} = authType === 'register' ? registerData() : loginData();
@@ -21,8 +22,14 @@ const AuthForm = ({authType}) => {
     };
 
     useEffect(() => {
-
-    }, [])
+        const userObj = JSON.parse(window.localStorage.getItem('user'));
+        
+        if (userObj !== null) {
+            window.location.href = './'
+        }
+        setPending(false);
+        setErrors(state.errorMessage);
+    }, [state.submitDate])
     
     const isInputsComplete = () => {
         const uncompleteList = data.filter( (item) => {
@@ -33,12 +40,17 @@ const AuthForm = ({authType}) => {
 
     const handlePress = () => {
         setPending(true);
+        setErrors('');
         var boundData = {};
         data.forEach( (item) => {
             boundData[item.id] = item.val
         }) 
 
-        register(boundData);
+        if (authType === 'register') { 
+            register(boundData);
+        } else {
+            login(boundData);
+        }
 
     }
     
@@ -48,9 +60,9 @@ const AuthForm = ({authType}) => {
             <div className="auth-form-sub-header">{subTitle}</div>
             <div className="auth-form">
                 {renderInput()}
-                <div className="auth-form-error-message">{state.errorMessage ? state.errorMessage : ''}</div>
+                <div className="auth-form-error-message">{errors ? `Sorry, ${errors}` : ''}</div>
                 {pending ? 
-                    <div class="loader"></div> :
+                    <div className="loader"></div> :
                     <button className="auth-form-button" onClick={handlePress} disabled={isInputsComplete()}>{buttonText}</button>                  
                 }
                 {footer()}
